@@ -16,12 +16,12 @@ const categories = [
 
 const CategoryList = () => {
   return (
-    <div className="flex flex-col items-center p-4">
-      <div className="flex gap-4 p-4 scrollbar-hide lg:justify-center">
+    <div className="flex justify-center  items-center">
+      <div className="flex gap-13 p-4 scrollbar-hide lg:justify-center">
         {categories.map((category, index) => (
-          <div key={index} className="flex-shrink-0 w-26 flex flex-col items-center text-center cursor-pointer">
+          <div key={index} className="w-[102px] flex flex-col items-center text-center cursor-pointer">
             {/* Блок с иконкой */}
-            <div className="w-24 h-24 flex items-center justify-center p-2 mb-2 rounded-2xl bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
+            <div className="w-32 h-32 flex items-center justify-center p-2 mb-2 rounded-2xl bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
               <span className="text-4xl">{category.icon}</span>
             </div>
             {/* Текст категории под блоком */}

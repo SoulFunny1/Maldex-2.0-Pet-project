@@ -9,7 +9,7 @@ import 'swiper/css/pagination';
 
 const HomePageLayout = () => {
   return (
-    <div className="flex mx-20 p-4 gap-4 h-[450px]">
+    <div className="flex mx-25 p-4 gap-4 h-[450px]">
       {/* Левая колонка: Swiper Slider */}
       <div className="flex-1 rounded-xl overflow-hidden shadow-lg relative bg-[#00B6BA] h-full">
         <Swiper

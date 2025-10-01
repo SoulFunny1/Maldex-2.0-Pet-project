@@ -8,7 +8,7 @@ export default function Header() {
                         <div className="flex gap-2">
                             <img src="./phone icon.svg" alt="" />
                             <div>
-                                <p className="font-medium ">8 702 701 5075</p>
+                                <p className="font-medium">8 702 701 5075</p>
                             </div>
                         </div>
                         <div className="flex gap-2">
