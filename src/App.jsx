@@ -3,7 +3,7 @@ import Layout from './Layout/Layout';
 import CategoriesPage from './components/categories'; 
 import SliderPage from './pages/Slider'; 
 import Home from './pages/Home';
-import Profile from './pages/userPage'; 
+import Admin from './components/AdminDashboard'; 
 
 export default function App() {
     return (
@@ -17,7 +17,7 @@ export default function App() {
                 <Route path="slider" element={<SliderPage />} />
                 
                 {/* Личный Кабинет */}
-                <Route path="profile" element={<Profile />} />
+                <Route path="admin" element={<Admin />} />
             </Route>
         </Routes>
     );

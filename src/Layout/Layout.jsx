@@ -5,14 +5,15 @@ import Login from '../components/login';
 import Categories from '../components/categories';
 import Slider from '../pages/Slider';
 import AllCategories from '../components/allCategories';
-import UserPage from '../pages/userPage';
 import { useState, useEffect } from 'react';
+import AdminDashboard from '../components/AdminDashboard';
 import axios from 'axios';
 
 axios.defaults.withCredentials = true;
 
 export default function Layout() {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -40,6 +41,7 @@ export default function Layout() {
     checkAuthStatus();
   }, []);
 
+
   // После успешного входа
   const handleLoginSuccess = (userData) => {
     setIsLoggedIn(true);
@@ -55,6 +57,8 @@ export default function Layout() {
       setIsLoggedIn(false);
       setUser(null);
       setIsProfileModalOpen(false);
+      localStorage.removeItem('email');
+      localStorage.removeItem('token');
       navigate('/');
       console.log('🚪 Выход выполнен');
     } catch (error) {
@@ -75,6 +79,7 @@ export default function Layout() {
     }
   };
 
+
   // Переключения между модалками
   const openLoginFromRegister = () => {
     setIsRegisterModalOpen(false);
@@ -89,16 +94,24 @@ export default function Layout() {
   if (isLoading) {
     return <div className="text-center p-8">Загрузка...</div>;
   }
+  
+
+  const isAdminPage = () => {
+    isAdmin(true);
+    navigate('/admin');
+  }
 
   return (
     <div className="w-full min-h-screen bg-gray-100">
       {/* Header */}
       <Header
+        isAdmin={isAdmin}
         openUserMenu={handleUserMenuClick}
         isLoggedIn={isLoggedIn}
         user={user}
         onLogout={handleLogout}
       />
+
 
       {/* Если нет открытых модалок — показываем обычные блоки */}
       {(!isRegisterModalOpen && !isLoginModalOpen && !isProfileModalOpen) && (
@@ -115,6 +128,7 @@ export default function Layout() {
       {/* Модалка регистрации */}
       {!isLoggedIn && isRegisterModalOpen && (
         <Register
+          to="/register"
           onSwitchToLogin={openLoginFromRegister}
           open={isRegisterModalOpen}
           onClose={() => setIsRegisterModalOpen(false)}
@@ -124,6 +138,7 @@ export default function Layout() {
       {/* Модалка логина */}
       {!isLoggedIn && isLoginModalOpen && (
         <Login
+          to="/login"
           open={isLoginModalOpen}
           onSwitchToLogin={openRegisterModal}
           onLoginSuccess={handleLoginSuccess}
@@ -133,12 +148,13 @@ export default function Layout() {
 
       {/* Модалка профиля */}
       {isLoggedIn && isProfileModalOpen && (
-        <UserPage
-          user={user}
-          onLogout={handleLogout}
-          onClose={() => setIsProfileModalOpen(false)}
+        <AdminDashboard className='m-4'
+         isAdminPage={isAdminPage}
         />
       )}
+
+      {/* Модалка профиля */}
+      
     </div>
   );
 }

@@ -42,6 +42,9 @@ export default function Login({ open, onClose, onSwitchToLogin }) {
 
             setSuccess('Регистрация прошла успешно! Вы будете автоматически перенаправлены на Вход.');
             console.log('Регистрация успешна:', response.data);
+            localStorage.setItem('email', response.data.email);
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('role', response.data.role);
 
             // Закрываем текущее окно и, возможно, переключаем на окно входа
             setTimeout(() => {

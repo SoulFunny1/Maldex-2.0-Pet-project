@@ -1,6 +1,6 @@
 import { useState } from "react";
-export default function Header({ openUserMenu }) {
-    
+export default function Header({ openUserMenu, isAdmin }) {
+
 
 
     return (
@@ -11,7 +11,7 @@ export default function Header({ openUserMenu }) {
 
                         <div className="flex gap-2">
                             <img src="./phone icon.svg" alt="" />
-                            <div>
+                            <div className="flex">
                                 <p className="font-medium">8 702 701 5075</p>
                             </div>
                         </div>
@@ -95,10 +95,21 @@ export default function Header({ openUserMenu }) {
                             <img src="./heart.svg" alt="" />
                             <p className="font-medium ">Избранное</p>
                         </div>
-                        <div onClick={() => openUserMenu(true)} className="flex flex-col items-center cursor-pointer">
+                        <div
+                            onClick={() => {
+                                if (localStorage.getItem('role') === 'admin' || localStorage.getItem('email') === '123@gmail.com') {
+                                    isAdmin();
+                                }
+                                else {
+                                    openUserMenu();
+                                }
+                            }}
+                            className="flex flex-col items-center cursor-pointer"
+                        >
                             <img src="./union.svg" alt="" />
-                            <p className="font-medium ">Кабинет</p>
+                            <p className="font-medium">Кабинет</p>
                         </div>
+
                         <div className="flex flex-col items-center">
                             <img src="./korz.svg" alt="" />
                             <p className="text-[#F1107E] font-medium ">14 619 ₽ </p>

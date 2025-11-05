@@ -1,11 +1,10 @@
-
-#root{
-    overflow: hidden;
+#root {
+    overflow: visible !important;
 }
-.container{
+
+.container {
     max-width: 1620px;
     margin: 0 auto;
     padding: 0px 20px;
-    position: relative;
+    position: static !important;
 }
-    
