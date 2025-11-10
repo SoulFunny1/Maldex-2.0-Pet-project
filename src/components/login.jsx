@@ -50,6 +50,7 @@ export default function Login({ open, onClose, onSwitchToLogin }) {
             setTimeout(() => {
                 onClose();
                 if (onSwitchToLogin) onClose();
+                window.location.reload();
             }, 2000);
 
         } catch (err) {
