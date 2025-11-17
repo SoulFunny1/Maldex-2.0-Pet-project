@@ -7,9 +7,13 @@ export default function Header({
   isLoggedIn,
   user,
   onLogout,
-  isAdmin
+  isAdmin,
+  helloUser
 }) {
   const username = isLoggedIn && user ? user.name || user.email : "Кабинет";
+
+
+
 
   return (
     <header className="mx-30">
@@ -97,9 +101,19 @@ export default function Header({
             {/* Кабинет */}
             <div
               onClick={() => {
-                if (!isLoggedIn) openUserMenu();
-                else if (isAdmin) onAdminClick();
-                else openUserMenu();
+                console.log("clicked");
+
+                if (!isLoggedIn) {
+                  openUserMenu(true);
+                  return;
+                }
+
+                if (isAdmin) {
+                  onAdminClick(true);
+                  return;
+                }
+
+                helloUser(true);
               }}
               className="flex flex-col items-center hover:text-red-600 transition"
             >

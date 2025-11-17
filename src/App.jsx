@@ -16,7 +16,7 @@ export default function App() {
                 <Route index element={<Home />} />
                 <Route path="categories" element={<CategoriesPage />} />
                 <Route path="slider" element={<SliderPage />} />
-                <Route path="helloUser" element={<helloUser />} />
+                <Route path="hellouser" element={<helloUser />} />
                 
                 {/* Личный Кабинет */}
                 <Route path="admin" element={<Admin />} />

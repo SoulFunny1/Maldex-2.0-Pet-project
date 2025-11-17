@@ -1,22 +1,29 @@
 import React from "react";
 
-export default function HelloUser({ user, onLogout }) {
+export default function HelloUser({ user, onLogout, onClose }) {
   return (
     <div className="mx-30 pt-10 min-h-screen bg-gradient-to-br flex flex-col items-center font-sans relative overflow-hidden">
       {/* Украшение фона */}
       <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/white-diamond.png')]"></div>
 
       {/* Шапка */}
+
       <div className="w-full bg-white shadow-lg rounded-3xl py-6 px-10 flex justify-between items-center relative z-10">
         <h1 className="text-3xl font-bold text-red-600 tracking-wide drop-shadow-sm">
           Личный кабинет
         </h1>
+        <div onClick={onClose} className="flex items-center justify-center bg-red-600 text-white px-6 py-2 rounded-xl font-semibold hover:bg-red-700 active:scale-95 transition-all duration-200 shadow-md">
+          <button >Закрыть</button>
+        </div>
+
         <button
           onClick={onLogout}
           className="bg-red-600 text-white px-6 py-2 rounded-xl font-semibold hover:bg-red-700 active:scale-95 transition-all duration-200 shadow-md"
         >
           Выйти
         </button>
+
+
       </div>
 
       {/* Основной блок */}
@@ -29,8 +36,8 @@ export default function HelloUser({ user, onLogout }) {
           👋
         </h2>
         <p className="text-gray-500 text-center mb-10 leading-relaxed">
-          Добро пожаловать в твой личный кабинет!  
-          Здесь ты можешь просматривать свои заказы, изменять личные данные  
+          Добро пожаловать в твой личный кабинет!
+          Здесь ты можешь просматривать свои заказы, изменять личные данные
           и управлять профилем. Всё сделано с душой ❤️
         </p>
 

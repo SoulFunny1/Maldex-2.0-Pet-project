@@ -492,8 +492,8 @@ const ProductGridWithModal = () => {
     }
 
     return (
-        <div className="min-h-screen  font-[Inter] p-4 sm:p-8">
-            <div className="max-w-7xl mx-auto">
+        <div className="min-h-screen bg-white mx-30 rounded-2xl  font-[Inter] p-4 sm:p-8">
+            <div className="max-w-9xl mx-auto">
                 <h2 className="text-4xl font-black text-gray-900 mb-10 border-b-4 border-red-600 inline-block pb-1">
                     Каталог товаров Maldex
                 </h2>

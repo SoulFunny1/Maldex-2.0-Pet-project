@@ -7,7 +7,7 @@ import Slider from '../pages/Slider';
 import AllCategories from '../components/allCategories';
 import { useState, useEffect, useCallback } from 'react';
 import AdminDashboard from '../components/AdminDashboard';
-import helloUser from '../components/helloUser';
+import HelloUser from '../components/helloUser';
 import ProductInHeader from '../components/ProductsInHeader';
 import FAQ from '../components/common/FAQ';
 import Footer from '../components/common/footer';
@@ -19,7 +19,6 @@ axios.defaults.withCredentials = true;
 export default function Layout() {
   const navigate = useNavigate();
 
-  const [currentPage, setCurrentPage] = useState('home');
   const [isAdmin, setIsAdmin] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
@@ -27,42 +26,35 @@ export default function Layout() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [showWelcome, setShowWelcome] = useState(true);
+  const [showWelcome, setShowWelcome] = useState(false);
 
-  // Проверка авторизации через backend
   const checkAuthStatus = useCallback(async () => {
-  try {
-    const response = await axios.get('http://localhost:4000/api/users/me', { withCredentials: true });
+    try {
+      const response = await axios.get('http://localhost:4000/api/users/me', {
+        withCredentials: true
+      });
 
-    if (response.status === 200) {
-      const userData = response.data;
+      if (response.status === 200) {
+        const userData = response.data;
 
-      // Определяем роль на основе статуса
-      const isAdmin = userData.status === 'inactive';
-      const isUser = userData.status === 'active';
+        setIsLoggedIn(true);
+        setIsAdmin(userData.role === 'admin');
+        setUser(userData); // ← ПРАВИЛЬНО!
 
-      setIsLoggedIn(true);
-      setUser(isUser ? userData : null);
-      setIsAdmin(isAdmin);
-
-      console.log(
-        `✅ Пользователь авторизован: ${isAdmin ? 'Админ' : isUser ? 'Обычный пользователь' : 'Неизвестный статус'}`,
-        userData
-      );
-    } else {
+      } else {
+        setIsLoggedIn(false);
+        setUser(null);
+        setIsAdmin(false);
+      }
+    } catch (error) {
       setIsLoggedIn(false);
       setUser(null);
       setIsAdmin(false);
+    } finally {
+      setIsLoading(false);
     }
-  } catch (error) {
-    console.warn('❌ Пользователь не авторизован:', error.message);
-    setIsLoggedIn(false);
-    setUser(null);
-    setIsAdmin(false);
-  } finally {
-    setIsLoading(false);
-  }
-}, []);
+  }, []);
+
 
 
   useEffect(() => {
@@ -70,41 +62,42 @@ export default function Layout() {
   }, [checkAuthStatus]);
 
   // После успешного входа
-  const handleLoginSuccess = (userData) => {
-    setIsLoggedIn(true);
-    setUser(userData);
-    setIsLoginModalOpen(false);
-    setIsAdmin(userData.role === 'admin');
-    console.log('🔓 Вход выполнен успешно');
-  };
+
 
   // Выход
   const handleLogout = async () => {
-        try {
-            // ИСПРАВЛЕНИЕ: Добавлен протокол http://
-            await axios.post('http://localhost:4000/api/users/logout');
-            console.log('Выход успешен');
-            // В реальном приложении здесь будет window.location.href = '/login';
-            console.log('Вы успешно вышли из системы');
-            window.location.reload();
-        } catch (e) {
-            console.error('Ошибка при выходе:', e);
-            console.log('Ошибка при выходе из системы');
-        }
-    };
-
-  // Клик по профилю
-  const handleUserMenuClick = () => {
-    setIsRegisterModalOpen(false);
-    setIsLoginModalOpen(false);
-    setIsProfileModalOpen(false);
-
-    if (isLoggedIn) {
-      setIsProfileModalOpen(true);
-    } else {
-      setIsLoginModalOpen(true);
+    try {
+      // ИСПРАВЛЕНИЕ: Добавлен протокол http://
+      await axios.post('http://localhost:4000/api/users/logout');
+      console.log('Выход успешен');
+      // В реальном приложении здесь будет window.location.href = '/login';
+      console.log('Вы успешно вышли из системы');
+      window.location.reload();
+    } catch (e) {
+      console.error('Ошибка при выходе:', e);
+      console.log('Ошибка при выходе из системы');
     }
   };
+
+  // Клик по профилю
+
+
+  const handleUserMenuClick = () => {
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+
+    if (isAdmin) {
+      setIsProfileModalOpen(true);
+      setShowWelcome(false);
+      return;
+    }
+
+    // Обычный пользователь
+    setShowWelcome(true);
+  };
+
 
   // Переключения между модалками
   const openLoginFromRegister = () => {
@@ -120,7 +113,13 @@ export default function Layout() {
   // Переход в админку
   const handleAdminPageClick = () => {
     setIsProfileModalOpen(false);
-    navigate('/admin');
+    setIsRegisterModalOpen(false);
+    setIsLoginModalOpen(false);
+    setIsAdmin(true);
+    setShowWelcome(false);
+    setIsProfileModalOpen(true);
+
+
   };
 
   // Клик по логотипу — возвращение на главную
@@ -128,18 +127,21 @@ export default function Layout() {
     setIsRegisterModalOpen(false);
     setIsLoginModalOpen(false);
     setIsProfileModalOpen(false);
-    setIsAdmin(false);
     navigate('/');
   };
+
 
   const helloUser = () => {
     setIsRegisterModalOpen(false);
     setIsLoginModalOpen(false);
     setIsProfileModalOpen(false);
     setIsAdmin(false);
-    navigate('/hellouser');
     setShowWelcome(true);
   };
+
+  const closeHelloUser = () => setShowWelcome(false);
+
+
 
   if (isLoading) {
     return (
@@ -152,7 +154,8 @@ export default function Layout() {
     );
   }
 
-  const isModalOpen = isRegisterModalOpen || isLoginModalOpen || isProfileModalOpen;
+  const isModalOpen = isRegisterModalOpen || isLoginModalOpen || isProfileModalOpen || showWelcome;
+
 
   return (
     <div className="w-full min-h-screen bg-gray-100 font-sans">
@@ -174,6 +177,9 @@ export default function Layout() {
           <Slider />
           <AllCategories />
           <Outlet />
+          <ProductInHeader />
+          <FAQ />
+          <Footer />
         </div>
       )}
 
@@ -193,22 +199,28 @@ export default function Layout() {
           to="/login"
           open={isLoginModalOpen}
           onSwitchToLogin={openRegisterModal}
-          onLoginSuccess={handleLoginSuccess}
           onClose={() => setIsLoginModalOpen(false)}
         />
       )}
 
-      {isLoggedIn && isProfileModalOpen && (
+      {isLoggedIn && isProfileModalOpen && isAdmin && (
         <AdminDashboard
           isAdminPage={handleAdminPageClick}
           onClose={() => setIsProfileModalOpen(false)}
           user={user}
           onLogout={handleLogout}
         />
+
       )}
-      <ProductInHeader />
-      <FAQ />
-      <Footer />
+
+
+
+      {isLoggedIn && showWelcome && user && !isAdmin && (
+        <HelloUser user={user} onLogout={handleLogout} onClose={closeHelloUser} />
+      )}
+
+
+
     </div>
   );
 }
