@@ -5,6 +5,7 @@ import SliderPage from './pages/Slider';
 import Home from './pages/Home';
 import Admin from './components/AdminDashboard'; 
 import helloUser from './components/helloUser';
+import ViewCategories from './components/ViewCategories';
 
 export default function App() {
     return (
@@ -17,6 +18,7 @@ export default function App() {
                 <Route path="categories" element={<CategoriesPage />} />
                 <Route path="slider" element={<SliderPage />} />
                 <Route path="hellouser" element={<helloUser />} />
+                <Route path="/category/:categoryName" element={<ViewCategories />} />
                 
                 {/* Личный Кабинет */}
                 <Route path="admin" element={<Admin />} />

@@ -8,7 +8,8 @@ export default function Header({
   user,
   onLogout,
   isAdmin,
-  helloUser
+  helloUser,
+  openCart
 }) {
   const username = isLoggedIn && user ? user.name || user.email : "Кабинет";
 
@@ -121,7 +122,7 @@ export default function Header({
               <p className="font-medium">{username}</p>
             </div>
 
-            <div className="flex flex-col items-center hover:text-red-600 transition">
+            <div onClick={openCart} className="flex flex-col items-center hover:text-red-600 transition">
               <img src="./korz.svg" alt="" />
               <p className="text-[#F1107E] font-medium">14 619 ₽</p>
             </div>

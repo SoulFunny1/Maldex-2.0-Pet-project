@@ -11,6 +11,8 @@ import HelloUser from '../components/helloUser';
 import ProductInHeader from '../components/ProductsInHeader';
 import FAQ from '../components/common/FAQ';
 import Footer from '../components/common/footer';
+import ViewCategory from '../components/ViewCategories';
+import Cart from '../components/korzina';
 import axios from 'axios';
 
 
@@ -27,6 +29,10 @@ export default function Layout() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showWelcome, setShowWelcome] = useState(false);
+  const [isViewCategoryOpen, setIsViewCategoryOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+
 
   const checkAuthStatus = useCallback(async () => {
     try {
@@ -128,6 +134,7 @@ export default function Layout() {
     setIsLoginModalOpen(false);
     setIsProfileModalOpen(false);
     navigate('/');
+    window.location.reload();
   };
 
 
@@ -140,6 +147,11 @@ export default function Layout() {
   };
 
   const closeHelloUser = () => setShowWelcome(false);
+
+  const closeViewCategory = () => setIsViewCategoryOpen(false);
+  const openViewCategory = () => setIsViewCategoryOpen(true);
+  const openCart = () => setIsCartOpen(true);
+  const closeCart = () => setIsCartOpen(false);
 
 
 
@@ -154,12 +166,13 @@ export default function Layout() {
     );
   }
 
-  const isModalOpen = isRegisterModalOpen || isLoginModalOpen || isProfileModalOpen || showWelcome;
+  const isModalOpen = isRegisterModalOpen || isLoginModalOpen || isProfileModalOpen || isViewCategoryOpen || showWelcome;
 
 
   return (
     <div className="w-full min-h-screen bg-gray-100 font-sans">
       <Header
+        openCart={openCart}
         helloUser={helloUser}
         allClose={allPagesClose}
         onAdminClick={handleAdminPageClick}
@@ -175,11 +188,12 @@ export default function Layout() {
         <div className="pb-10">
           <Categories />
           <Slider />
-          <AllCategories />
+          <AllCategories openViewCategory={openViewCategory}/>
           <Outlet />
           <ProductInHeader />
           <FAQ />
           <Footer />
+
         </div>
       )}
 
@@ -215,8 +229,23 @@ export default function Layout() {
 
 
 
+
+
       {isLoggedIn && showWelcome && user && !isAdmin && (
         <HelloUser user={user} onLogout={handleLogout} onClose={closeHelloUser} />
+      )}
+
+      {/* Используйте его собственное состояние isViewCategoryOpen */}
+      {isViewCategoryOpen && (
+        <ViewCategory
+          onClose={closeViewCategory}
+        />
+      )}
+
+      {isCartOpen && (
+        <Cart
+          onClose={closeCart}
+        />
       )}
 
 
